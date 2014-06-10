@@ -30,6 +30,11 @@
     <Compile Include="ActionResults\RedirectResultTest.cs" />
     <Compile Include="ActionSelectionConventionTests.cs" />
     <Compile Include="AntiXsrf\AntiForgeryOptionsTests.cs" />
+    <Compile Include="Descriptors\ReflectedActionDescriptorProviderTests.cs" />
+    <Compile Include="Descriptors\ReflectedParameterModelTests.cs" />
+    <Compile Include="Descriptors\ReflectedActionModelTests.cs" />
+    <Compile Include="Descriptors\ReflectedControllerModelTests.cs" />
+    <Compile Include="MockMvcOptionsAccessor.cs" />
     <Compile Include="MvcOptionsTests.cs" />
     <Compile Include="AntiXsrf\AntiForgeryTokenSerializerTest.cs" />
     <Compile Include="AntiXsrf\ITokenProvider.cs" />
@@ -52,7 +57,6 @@
     <Compile Include="JsonResultTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyHelperTest.cs" />
-    <Compile Include="ReflectedActionDescriptorProviderTests.cs" />
     <Compile Include="ReflectedActionInvokerTest.cs" />
     <Compile Include="Rendering\HtmlAttributePropertyHelperTest.cs" />
     <Compile Include="Rendering\ViewContextTests.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="KnownRouteValueConstraintTests.cs" />
     <Compile Include="TestController.cs" />
     <Compile Include="TypeHelperTest.cs" />
+    <Compile Include="StaticActionDiscoveryConventions.cs" />
     <Compile Include="UrlHelperTest.cs" />
     <Compile Include="ViewResultTest.cs" />
     <Compile Include="ViewComponentTests.cs" />
