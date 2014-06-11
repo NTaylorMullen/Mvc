@@ -45,6 +45,8 @@ namespace MvcSample.Web
                     services,
                     fallbackServiceProvider: app.ApplicationServices);
 
+                builder.RegisterModule<MonitoringModule>();
+
                 IContainer container = builder.Build();
 
                 app.UseServices(container.Resolve<IServiceProvider>());

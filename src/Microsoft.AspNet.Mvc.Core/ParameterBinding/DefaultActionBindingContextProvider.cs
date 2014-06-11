@@ -17,6 +17,8 @@ namespace Microsoft.AspNet.Mvc
         private readonly IInputFormatterProvider _inputFormatterProvider;
         private readonly IEnumerable<IModelValidatorProvider> _validatorProviders;
 
+        private ActionBindingContext _bindingContext;
+
         public DefaultActionBindingContextProvider(IModelMetadataProvider modelMetadataProvider,
                                                    IEnumerable<IModelBinder> modelBinders,
                                                    IEnumerable<IValueProviderFactory> valueProviderFactories,
@@ -33,12 +35,17 @@ namespace Microsoft.AspNet.Mvc
 
         public Task<ActionBindingContext> GetActionBindingContextAsync(ActionContext actionContext)
         {
+            var valueProviders = _valueProviderFactories.Select(factory => factory.GetValueProvider(factoryContext))
+            
+            if (_bindingContext != null)
+            {
+                return Task.FromResult(_bindingContext);
+            }
+
             var factoryContext = new ValueProviderFactoryContext(
                 actionContext.HttpContext, 
-                actionContext.RouteData.Values);
+                actionContext.RouteData.Values);            
 
-            var valueProviders = _valueProviderFactories.Select(factory => factory.GetValueProvider(factoryContext))
-                                                        .Where(vp => vp != null);
             var context = new ActionBindingContext(
                 actionContext,
                 _modelMetadataProvider,
@@ -47,6 +54,7 @@ namespace Microsoft.AspNet.Mvc
                 _inputFormatterProvider,
                 _validatorProviders);
 
+            _bindingContext = context;
             return Task.FromResult(context);
         }
     }
