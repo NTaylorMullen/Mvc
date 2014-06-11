@@ -1,13 +1,16 @@
-﻿using Autofac.Core;
+﻿#if NET45
+using Autofac.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNet.Mvc;
 
 namespace MvcSample.Web
 {
     public class MonitoringController
     {
+        [NonAction]
         public string ActivatedTypes()
         {
             var values = MonitoringModule.InstanceCount.ToArray();
@@ -24,6 +27,7 @@ namespace MvcSample.Web
             return builder.ToString();
         }
 
+        [NonAction]
         public void Clear()
         {
             MonitoringModule.Clear();
@@ -63,3 +67,4 @@ namespace MvcSample.Web
         }
     }
 }
+#endif

@@ -28,6 +28,8 @@ namespace MvcSample.Web
             if (configuration.TryGet("DependencyInjection", out diSystem) && 
                 diSystem.Equals("AutoFac", StringComparison.OrdinalIgnoreCase))
             {
+                app.UseMiddleware<MonitoringMiddlware>();
+
                 var services = new ServiceCollection();
 
                 services.AddMvc();
