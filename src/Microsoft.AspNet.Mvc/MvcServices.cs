@@ -27,7 +27,7 @@ namespace Microsoft.AspNet.Mvc
 
             yield return describe.Transient<IControllerFactory, DefaultControllerFactory>();
             yield return describe.Transient<IControllerDescriptorFactory, DefaultControllerDescriptorFactory>();
-            yield return describe.Transient<IActionSelector, DefaultActionSelector>();
+            yield return describe.Scoped<IActionSelector, DefaultActionSelector>();
             yield return describe.Transient<IActionInvokerFactory, ActionInvokerFactory>();
             yield return describe.Transient<IParameterDescriptorFactory, DefaultParameterDescriptorFactory>();
             yield return describe.Transient<IControllerAssemblyProvider, DefaultControllerAssemblyProvider>();
