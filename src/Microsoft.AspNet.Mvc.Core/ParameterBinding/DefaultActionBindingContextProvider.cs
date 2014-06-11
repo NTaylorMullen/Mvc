@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Microsoft.AspNet.Mvc
         private readonly IInputFormatterProvider _inputFormatterProvider;
         private readonly IEnumerable<IModelValidatorProvider> _validatorProviders;
 
-        private ActionBindingContext _bindingContext;
+        private Tuple<ActionContext, ActionBindingContext> _bindingContext;
 
         public DefaultActionBindingContextProvider(IModelMetadataProvider modelMetadataProvider,
                                                    IEnumerable<IModelBinder> modelBinders,
@@ -39,7 +40,10 @@ namespace Microsoft.AspNet.Mvc
             
             if (_bindingContext != null)
             {
-                return Task.FromResult(_bindingContext);
+                if (actionContext == _bindingContext.Item1)
+                {
+                    return Task.FromResult(_bindingContext.Item2);
+                }
             }
 
             var factoryContext = new ValueProviderFactoryContext(
@@ -54,7 +58,8 @@ namespace Microsoft.AspNet.Mvc
                 _inputFormatterProvider,
                 _validatorProviders);
 
-            _bindingContext = context;
+            _bindingContext = new Tuple<ActionContext, ActionBindingContext>(actionContext, context);
+
             return Task.FromResult(context);
         }
     }
