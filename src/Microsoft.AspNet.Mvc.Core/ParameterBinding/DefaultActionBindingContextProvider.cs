@@ -28,7 +28,7 @@ namespace Microsoft.AspNet.Mvc
         {
             _modelMetadataProvider = modelMetadataProvider;
             _modelBinders = modelBinders.OrderBy(
-                binder => binder.GetType() == typeof(ComplexModelDtoModelBinder) ? 1 : 0);
+                binder => binder.GetType() == typeof(ComplexModelDtoModelBinder) ? 1 : 0).ToArray();
             _valueProviderFactories = valueProviderFactories;
             _inputFormatterProvider = inputFormatterProvider;
             _validatorProviders = validatorProviders;
@@ -36,7 +36,6 @@ namespace Microsoft.AspNet.Mvc
 
         public Task<ActionBindingContext> GetActionBindingContextAsync(ActionContext actionContext)
         {
-            var valueProviders = _valueProviderFactories.Select(factory => factory.GetValueProvider(factoryContext))
             
             if (_bindingContext != null)
             {
@@ -47,8 +46,11 @@ namespace Microsoft.AspNet.Mvc
             }
 
             var factoryContext = new ValueProviderFactoryContext(
-                actionContext.HttpContext, 
-                actionContext.RouteData.Values);            
+                                    actionContext.HttpContext,
+                                    actionContext.RouteData.Values);
+
+            var valueProviders = _valueProviderFactories.Select(factory => factory.GetValueProvider(factoryContext))
+                                                        .Where(vp => vp != null);
 
             var context = new ActionBindingContext(
                 actionContext,
