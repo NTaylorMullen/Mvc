@@ -18,6 +18,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         private bool _convertEmptyStringToNull;
         private string _nullDisplayText;
         private string _description;
+        private string _displayName;
         private bool _isReadOnly;
         private bool _isComplexType;
         private bool _isRequired;
@@ -25,6 +26,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         private bool _convertEmptyStringToNullComputed;
         private bool _nullDisplayTextComputed;
         private bool _descriptionComputed;
+        private bool _displayNameComputed;
         private bool _isReadOnlyComputed;
         private bool _isComplexTypeComputed;
         private bool _isRequiredComputed;
@@ -109,6 +111,25 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
         }
 
+        public sealed override string DisplayName
+        {
+            get
+            {
+                if (!_displayNameComputed)
+                {
+                    _displayName = ComputeDisplayName();
+                    _displayNameComputed = true;
+                }
+
+                return _displayName;
+            }
+            set
+            {
+                _displayName = value;
+                _displayNameComputed = true;
+            }
+        }
+
         public sealed override bool IsReadOnly
         {
             get
@@ -173,6 +194,11 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         protected virtual string ComputeDescription()
         {
             return base.Description;
+        }
+
+        protected virtual string ComputeDisplayName()
+        {
+            return base.DisplayName;
         }
 
         protected virtual bool ComputeIsReadOnly()

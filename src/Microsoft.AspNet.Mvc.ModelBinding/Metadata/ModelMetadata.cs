@@ -58,6 +58,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         public virtual string DisplayFormatString { get; set; }
 
+        public virtual string DisplayName { get; set; }
+
         public virtual string EditFormatString { get; set; }
 
         public virtual bool IsComplexType
@@ -185,7 +187,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         public string GetDisplayName()
         {
-            return PropertyName ?? ModelType.Name;
+            return DisplayName ?? PropertyName ?? ModelType.Name;
         }
 
         protected virtual string ComputeSimpleDisplayText()
