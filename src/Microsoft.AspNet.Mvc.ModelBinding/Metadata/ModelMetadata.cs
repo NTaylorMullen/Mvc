@@ -183,7 +183,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
         }
 
-        public virtual string GetDisplayName()
+        public string GetDisplayName()
         {
             return PropertyName ?? ModelType.Name;
         }
