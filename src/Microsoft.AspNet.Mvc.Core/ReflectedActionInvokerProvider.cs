@@ -9,6 +9,7 @@ namespace Microsoft.AspNet.Mvc
     public class ReflectedActionInvokerProvider : IActionInvokerProvider
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ITypeActivator _typeActivator;
         private readonly IControllerFactory _controllerFactory;
         private readonly IActionBindingContextProvider _bindingProvider;
         private readonly INestedProviderManager<FilterProviderContext> _filterProvider;
@@ -16,12 +17,14 @@ namespace Microsoft.AspNet.Mvc
         public ReflectedActionInvokerProvider(IControllerFactory controllerFactory,
                                               IActionBindingContextProvider bindingProvider,
                                               INestedProviderManager<FilterProviderContext> filterProvider,
-                                              IServiceProvider serviceProvider)
+                                              IServiceProvider serviceProvider,
+                                              ITypeActivator typeActivator)
         {
             _controllerFactory = controllerFactory;
             _bindingProvider = bindingProvider;
             _filterProvider = filterProvider;
             _serviceProvider = serviceProvider;
+            _typeActivator = typeActivator;
         }
 
         public int Order

@@ -57,8 +57,20 @@ namespace Microsoft.AspNet.Mvc
 
         public async Task InvokeActionAsync()
         {
-            _actionContext.Controller = _controllerFactory.CreateController(_actionContext);
+            var controller = _controllerFactory.CreateController(_actionContext);
+            try
+            {
+                _actionContext.Controller = controller;
+                await InvokeActionAsyncCore();
+            }
+            finally
+            {
+                _controllerFactory.ReleaseController(controller);
+            }
+        }
 
+        private async Task InvokeActionAsyncCore()
+        {
             _filters = GetFilters();
             _cursor = new FilterCursor(_filters);
 
@@ -275,7 +287,7 @@ namespace Microsoft.AspNet.Mvc
                 {
                     var parameterType = parameter.BodyParameterInfo.ParameterType;
                     var modelMetadata = metadataProvider.GetMetadataForType(
-                        modelAccessor: null, 
+                        modelAccessor: null,
                         modelType: parameterType);
                     var providerContext = new InputFormatterProviderContext(
                         actionBindingContext.ActionContext.HttpContext,
@@ -295,7 +307,7 @@ namespace Microsoft.AspNet.Mvc
                 {
                     var parameterType = parameter.ParameterBindingInfo.ParameterType;
                     var modelMetadata = metadataProvider.GetMetadataForType(
-                        modelAccessor: null, 
+                        modelAccessor: null,
                         modelType: parameterType);
 
                     var modelBindingContext = new ModelBindingContext
@@ -400,8 +412,8 @@ namespace Microsoft.AspNet.Mvc
                 _actionContext.Controller,
                 _actionExecutingContext.ActionArguments);
 
-            var underlyingReturnType = 
-                TypeHelper.GetTaskInnerTypeOrNull(actionMethodInfo.ReturnType) ?? 
+            var underlyingReturnType =
+                TypeHelper.GetTaskInnerTypeOrNull(actionMethodInfo.ReturnType) ??
                 actionMethodInfo.ReturnType;
 
             var actionResult = CreateActionResult(
@@ -459,8 +471,8 @@ namespace Microsoft.AspNet.Mvc
                     {
                         // Short-circuited by not calling next
                         _resultExecutedContext = new ResultExecutedContext(
-                            _resultExecutingContext, 
-                            _filters, 
+                            _resultExecutingContext,
+                            _filters,
                             _resultExecutingContext.Result)
                         {
                             Canceled = true,
@@ -470,8 +482,8 @@ namespace Microsoft.AspNet.Mvc
                     {
                         // Short-circuited by setting Cancel == true
                         _resultExecutedContext = new ResultExecutedContext(
-                            _resultExecutingContext, 
-                            _filters, 
+                            _resultExecutingContext,
+                            _filters,
                             _resultExecutingContext.Result)
                         {
                             Canceled = true,
@@ -486,8 +498,8 @@ namespace Microsoft.AspNet.Mvc
                     {
                         // Short-circuited by setting Cancel == true
                         _resultExecutedContext = new ResultExecutedContext(
-                            _resultExecutingContext, 
-                            _filters, 
+                            _resultExecutingContext,
+                            _filters,
                             _resultExecutingContext.Result)
                         {
                             Canceled = true,
@@ -504,16 +516,16 @@ namespace Microsoft.AspNet.Mvc
 
                     Contract.Assert(_resultExecutedContext == null);
                     _resultExecutedContext = new ResultExecutedContext(
-                        _resultExecutingContext, 
-                        _filters, 
+                        _resultExecutingContext,
+                        _filters,
                         _resultExecutingContext.Result);
                 }
             }
             catch (Exception exception)
             {
                 _resultExecutedContext = new ResultExecutedContext(
-                    _resultExecutingContext, 
-                    _filters, 
+                    _resultExecutingContext,
+                    _filters,
                     _resultExecutingContext.Result)
                 {
                     ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception)
