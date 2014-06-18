@@ -1,9 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Framework.DependencyInjection;
 
 namespace Microsoft.AspNet.Mvc.ModelBinding
 {
@@ -17,17 +19,31 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
     /// </remarks>
     public class CompositeModelBinder : IModelBinder
     {
-        public CompositeModelBinder([NotNull] IEnumerable<IModelBinder> binders)
-            : this(binders.ToArray())
+        private readonly IEnumerable<ModelBinderDescriptor> _descriptors;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ITypeActivator _typeActivator;
+        private IModelBinder[] _binders;
+
+        public CompositeModelBinder([NotNull] IEnumerable<ModelBinderDescriptor> descriptors,
+                                    [NotNull] IServiceProvider serviceProvider,
+                                    [NotNull] ITypeActivator typeActivator)
         {
+            _descriptors = descriptors;
+            _serviceProvider = serviceProvider;
+            _typeActivator = typeActivator;
         }
 
-        public CompositeModelBinder(params IModelBinder[] binders)
-        {
-            Binders = binders;
+        private IModelBinder[] Binders {
+            get
+            {
+                if (_binders == null)
+                {
+                    _binders = _descriptors.Select(d => d.GetInstance(_typeActivator, _serviceProvider))
+                                           .ToArray();
+                }
+                return _binders;
+            }
         }
-
-        private IModelBinder[] Binders { get; set; }
 
         public virtual async Task<bool> BindModelAsync([NotNull] ModelBindingContext bindingContext)
         {

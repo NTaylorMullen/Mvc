@@ -3,11 +3,21 @@
 
 using System;
 using Microsoft.AspNet.Mvc.Core;
+using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace Microsoft.AspNet.Mvc
 {
     public class MvcOptions
     {
+        private readonly ModelBinderDescriptorCollection _binderDescriptors = new ModelBinderDescriptorCollection
+        {
+            new ModelBinderDescriptor(typeof(TypeConverterModelBinder)),
+            new ModelBinderDescriptor(typeof(TypeMatchModelBinder)),
+            new ModelBinderDescriptor(typeof(GenericModelBinder)),
+            new ModelBinderDescriptor(typeof(MutableObjectModelBinder)),
+            new ModelBinderDescriptor(typeof(ComplexModelDtoModelBinder)),
+        };
+
         private AntiForgeryOptions _antiForgeryOptions = new AntiForgeryOptions();
 
         public AntiForgeryOptions AntiForgeryOptions
@@ -28,6 +38,11 @@ namespace Microsoft.AspNet.Mvc
 
                 _antiForgeryOptions = value;
             }
+        }
+
+        public ModelBinderDescriptorCollection ModelBinders
+        {
+            get { return _binderDescriptors; }
         }
     }
 }

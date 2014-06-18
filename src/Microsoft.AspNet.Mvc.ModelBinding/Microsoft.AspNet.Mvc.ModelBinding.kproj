@@ -60,6 +60,8 @@
     <Compile Include="Metadata\DataAnnotationsModelMetadataProvider.cs" />
     <Compile Include="Metadata\EmptyModelMetadataProvider.cs" />
     <Compile Include="Metadata\IModelMetadataProvider.cs" />
+    <Compile Include="Metadata\ModelBinderDescriptor.cs" />
+    <Compile Include="Metadata\ModelBinderDescriptorCollection.cs" />
     <Compile Include="Metadata\ModelMetadata.cs" />
     <Compile Include="ModelBindingContext.cs" />
     <Compile Include="ModelError.cs" />
