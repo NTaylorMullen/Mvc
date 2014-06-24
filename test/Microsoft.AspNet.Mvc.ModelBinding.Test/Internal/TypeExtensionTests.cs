@@ -62,8 +62,45 @@ namespace Microsoft.AspNet.Mvc
             Assert.True(result);
         }
 
+        [Fact]
+        public void GetReadableProperties_ReturnsInstancePropertiesWithPublicGetters()
+        {
+            // Arrange
+            var type = typeof(GetReadablePropertiesType);
+
+
+            // Act
+            var result = TypeExtensions.GetReadableProperties(type);
+
+            // Assert
+            var prop = Assert.Single(result);
+            Assert.Equal("Visible", prop.Name);
+        }
+
         private class Foo
         {
+        }
+
+        private class GetReadablePropertiesType
+        {
+            public string this[int index]
+            {
+                get { return string.Empty; } 
+                set { }
+            }
+
+            public int Visible { get; set; }
+
+            private string NotVisible { get; set; }
+
+            public string NotVisible2 { private get; set; }
+
+            public string NotVisible3
+            {
+                set { }
+            }
+
+            public static string NotVisible4 { get; set; }
         }
     }
 }

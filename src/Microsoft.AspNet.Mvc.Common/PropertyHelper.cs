@@ -192,13 +192,7 @@ namespace Microsoft.AspNet.Mvc
 
             if (!cache.TryGetValue(type, out helpers))
             {
-                // We avoid loading indexed properties using the where statement.
-                // Indexed properties are not useful (or valid) for grabbing properties off an anonymous object.
-                var properties = type.GetRuntimeProperties().Where(
-                    prop => prop.GetIndexParameters().Length == 0 &&
-                    prop.GetMethod != null &&
-                    prop.GetMethod.IsPublic &&
-                    !prop.GetMethod.IsStatic);
+                var properties = TypeExtensions.GetReadableProperties(type);
 
                 helpers = properties.Select(p => createPropertyHelper(p)).ToArray();
                 cache.TryAdd(type, helpers);

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -116,6 +117,20 @@ namespace Microsoft.AspNet.Mvc
 
             var openType = closedType.GetGenericTypeDefinition();
             return (matchingOpenType == openType) ? closedTypeInfo.GenericTypeArguments : null;
+        }
+
+        /// <summary>
+        /// Returns a sequence of instances properties on a type with public getters that excludes indexers.
+        /// </summary>
+        public static IEnumerable<PropertyInfo> GetReadableProperties([NotNull] Type type)
+        {
+            // We avoid loading indexed properties using the where statement.
+            // Indexed properties are not useful (or valid) for grabbing properties off an anonymous object.
+            return type.GetRuntimeProperties()
+                       .Where(prop => prop.GetIndexParameters().Length == 0 &&
+                                      prop.GetMethod != null &&
+                                      prop.GetMethod.IsPublic &&
+                                      !prop.GetMethod.IsStatic);
         }
     }
 }
