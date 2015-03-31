@@ -1,0 +1,4 @@
+language: csharp
+solution: Mvc.sln
+script:
+  - ./build.sh
